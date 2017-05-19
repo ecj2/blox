@@ -66,12 +66,18 @@ class Player {
 
             if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h - 2) != "y") {
 
+              undo_block_x[i][moves] = Blocks[i].getX() / tile_w;
+              undo_block_y[i][moves] = Blocks[i].getY() / tile_h;
+
               Blocks[i].push(UP);
             }
           }
         }
 
         if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h - 1) != "y") {
+
+          undo_player_x[moves] = this.x / tile_w;
+          undo_player_y[moves] = this.y / tile_h;
 
           this.move[UP] = true;
 
@@ -120,12 +126,18 @@ class Player {
 
             if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h + 2) != "y") {
 
+              undo_block_x[i][moves] = Blocks[i].getX() / tile_w;
+              undo_block_y[i][moves] = Blocks[i].getY() / tile_h;
+
               Blocks[i].push(DOWN);
             }
           }
         }
 
         if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h + 1) != "y") {
+
+          undo_player_x[moves] = this.x / tile_w;
+          undo_player_y[moves] = this.y / tile_h;
 
           this.move[DOWN] = true;
 
@@ -174,12 +186,18 @@ class Player {
 
             if (Objects.getTileFlag(this.x / tile_w - 2, this.y / tile_h) != "y") {
 
+              undo_block_x[i][moves] = Blocks[i].getX() / tile_w;
+              undo_block_y[i][moves] = Blocks[i].getY() / tile_h;
+
               Blocks[i].push(LEFT);
             }
           }
         }
 
         if (Objects.getTileFlag(this.x / tile_w - 1, this.y / tile_h) != "y") {
+
+          undo_player_x[moves] = this.x / tile_w;
+          undo_player_y[moves] = this.y / tile_h;
 
           this.move[LEFT] = true;
 
@@ -228,12 +246,18 @@ class Player {
 
             if (Objects.getTileFlag(this.x / tile_w + 2, this.y / tile_h) != "y") {
 
+              undo_block_x[i][moves] = Blocks[i].getX() / tile_w;
+              undo_block_y[i][moves] = Blocks[i].getY() / tile_h;
+
               Blocks[i].push(RIGHT);
             }
           }
         }
 
         if (Objects.getTileFlag(this.x / tile_w + 1, this.y / tile_h) != "y") {
+
+          undo_player_x[moves] = this.x / tile_w;
+          undo_player_y[moves] = this.y / tile_h;
 
           this.move[RIGHT] = true;
 
@@ -411,5 +435,10 @@ class Player {
   getY() {
 
     return this.y;
+  }
+
+  isMoving() {
+
+    return this.moving;
   }
 }

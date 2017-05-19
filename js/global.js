@@ -55,3 +55,15 @@ function collide(ax, ay, bx, by) {
 
   return (Math.abs(ax - bx) * 2 < (tile_w * 2) && (Math.abs(ay - by) * 2 < (tile_h * 2)));
 }
+
+let undo_player_x = [];
+let undo_player_y = [];
+
+let undo_block_x = [];
+let undo_block_y = [];
+
+for (let i = 0; i < 999; ++i) {
+
+  undo_block_x[i] = [i];
+  undo_block_y[i] = [i];
+}

@@ -323,4 +323,9 @@ class Block {
 
     return this.pushable[direction];
   }
+
+  isMoving() {
+
+    return this.moving;
+  }
 }

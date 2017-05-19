@@ -59,6 +59,12 @@ function restore() {
 
     Blocks[i].restore();
   }
+
+  for (let i = 0; i < number_of_blocks; ++i) {
+
+    undo_block_x[i] = [];
+    undo_block_y[i] = [];
+  }
 }
 
 function update() {
@@ -276,12 +282,68 @@ function update() {
       exportData();
     }
 
-    if (Momo.isKeyPressed(Momo.KEY_Z)) {
+    if (Momo.isKeyPressed(Momo.KEY_N)) {
 
       loadNextLevel();
     }
 
     if (!win) {
+
+      if (Momo.isKeyPressed(Momo.KEY_Z)) {
+
+        if (moves > 0) {
+
+          for (let i = 0; i < number_of_blocks; ++i) {
+
+            if (Blocks[i].isMoving()) {
+
+              // Moves can only be undone if the blocks are stationary.
+              return;
+            }
+          }
+
+          if (Smile.isMoving()) {
+
+            // Moves can only be undone if the player is stationary.
+            return;
+          }
+
+          --moves;
+
+          // Undo player's last move.
+          Smile.setX(undo_player_x[moves] * tile_w);
+          Smile.setY(undo_player_y[moves] * tile_h);
+
+          for (let i = 0; i < number_of_blocks; ++i) {
+
+            if (undo_block_x[i][moves] != undefined || undo_block_y[i][moves] != undefined) {
+
+              // Undo blocks' last moves.
+              Blocks[i].setX(undo_block_x[i][moves] * tile_w);
+              Blocks[i].setY(undo_block_y[i][moves] * tile_h);
+            }
+
+            for (let j = moves; j < undo_block_x.length; ++j) {
+
+              // Delete outdated undo coordinates, as there is no "redo" function.
+              undo_block_x[i][j] = undefined;
+              undo_block_y[i][j] = undefined;
+            }
+          }
+
+          for (let y = 0; y < tiles_per_screen_y; ++y) {
+
+            for (let x = 0; x < tiles_per_screen_x; ++x) {
+
+              if (Objects.getTile(x, y) == "04x00y") {
+
+                // Remove the block markers from the objects layer.
+                Objects.setTile(x, y, "00x00n");
+              }
+            }
+          }
+        }
+      }
 
       Smile.update();
     }
