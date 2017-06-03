@@ -52,6 +52,7 @@ function restore() {
   last_time = Momo.getTime();
 
   moves = 0;
+  moves_counter = 0;
 
   Smile.restore();
 
@@ -342,6 +343,8 @@ function update() {
               }
             }
           }
+
+          ++moves_counter;
         }
       }
 
@@ -407,7 +410,7 @@ function render() {
     Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, 8, -21, Momo.TEXT_ALIGN_LEFT, level + 1);
 
     // Draw number of moves player has made.
-    Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, Momo.getCanvasWidth() - 8, -21, Momo.TEXT_ALIGN_RIGHT, moves);
+    Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, Momo.getCanvasWidth() - 8, -21, Momo.TEXT_ALIGN_RIGHT, moves_counter);
   }
 
   if (win) {
@@ -475,7 +478,7 @@ function render() {
 
     results_text += "Solved in " + time_difference;
     results_text += " " + (time_difference == 1 ? "second" : "seconds");
-    results_text += " with " + moves + " " + (moves == 1 ? "move" : "moves") + ".";
+    results_text += " with " + moves_counter + " " + (moves == 1 ? "move" : "moves") + ".";
 
     Momo.drawText(
 

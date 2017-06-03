@@ -82,6 +82,7 @@ class Player {
           this.move[UP] = true;
 
           ++moves;
+          ++moves_counter;
         }
         else {
 
@@ -142,6 +143,7 @@ class Player {
           this.move[DOWN] = true;
 
           ++moves;
+          ++moves_counter;
         }
         else {
 
@@ -202,6 +204,7 @@ class Player {
           this.move[LEFT] = true;
 
           ++moves;
+          ++moves_counter;
         }
         else {
 
@@ -262,6 +265,7 @@ class Player {
           this.move[RIGHT] = true;
 
           ++moves;
+          ++moves_counter;
         }
         else {
 

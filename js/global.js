@@ -28,7 +28,11 @@ const PLAYER = 6;
 const tiles_per_screen_x = 26;
 const tiles_per_screen_y = 16;
 
+// This keeps track of moves that affect the placement of blocks and the such.
 let moves = 0;
+
+// This just keeps track of the number of moves to display on the HUD.
+let moves_counter = 0;
 
 let number_of_blocks = 0;
 
