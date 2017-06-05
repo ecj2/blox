@@ -668,13 +668,13 @@ function exportData() {
 
   let count = 0;
 
-  data = Smile.getX() / tile_w + "," + Smile.getY() / tile_h + ";\n\n";
+  data = Smile.getX() / tile_w + ", " + Smile.getY() / tile_h + ";\n\n";
 
   for (let y = 0; y < tiles_per_screen_y; ++y) {
 
     for (let x = 0; x < tiles_per_screen_x; ++x) {
 
-      data += Background.getTile(x, y) + ",";
+      data += Background.getTile(x, y) + ", ";
 
       ++count;
 
@@ -682,7 +682,7 @@ function exportData() {
 
         count = 0;
 
-        data += "\n";
+        data = data.substring(0, data.length - 1) + "\n";
       }
     }
   }
@@ -700,7 +700,7 @@ function exportData() {
 
     for (let x = 0; x < tiles_per_screen_x; ++x) {
 
-      data += Objects.getTile(x, y) + ",";
+      data += Objects.getTile(x, y) + ", ";
 
       ++count;
 
@@ -708,7 +708,7 @@ function exportData() {
 
         count = 0;
 
-        data += "\n";
+        data = data.substring(0, data.length - 1) + "\n";
       }
     }
   }
@@ -718,7 +718,8 @@ function exportData() {
 
 function importData(data) {
 
-  // Remove new lines and soft tabs from the data.
+  // Remove spaces, new lines, and soft tabs from the data.
+  data = data.replace(/ /g, "");
   data = data.replace(/\n/g, "");
   data = data.replace(/  /g, "");
 
