@@ -32,7 +32,7 @@ class Block {
 
   restore() {
 
-    Objects.setTile(this.x / tile_w, this.y / tile_h, "00x00n");
+    Objects.setTile(parseInt(this.x / tile_w), parseInt(this.y / tile_h), "00x00n");
 
     this.x = this.x_saved;
     this.y = this.y_saved;
@@ -55,7 +55,7 @@ class Block {
 
         this.play_sound = false;
 
-        Momo.playSound(sound_push, 0.35, 1.0, false);
+        //Momo.playSound(sound_push, 0.35, 1.0, false);
       }
     }
 
@@ -196,7 +196,7 @@ class Block {
 
     if (this.y > this.stop_tile * tile_h) {
 
-      this.y -= this.speed;
+      this.y = Smile.getY() - tile_h;
     }
     else {
 
@@ -223,7 +223,7 @@ class Block {
 
     if (this.y < this.stop_tile * tile_h) {
 
-      this.y += this.speed;
+      this.y = Smile.getY() + tile_h;
     }
     else {
 
@@ -250,7 +250,7 @@ class Block {
 
     if (this.x > this.stop_tile * tile_h) {
 
-      this.x -= this.speed;
+      this.x = Smile.getX() - tile_w;
     }
     else {
 
@@ -277,7 +277,7 @@ class Block {
 
     if (this.x < this.stop_tile * tile_h) {
 
-      this.x += this.speed;
+      this.x = Smile.getX() + tile_w;
     }
     else {
 

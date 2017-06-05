@@ -47,6 +47,32 @@ function save() {
 
 function restore() {
 
+  if (!win) {
+
+    let moving = false;
+
+    if (Smile.isMoving()) {
+
+      moving = true;
+    }
+
+    for (let i = 0; i < number_of_blocks; ++i) {
+
+      if (Blocks[i].isMoving()) {
+
+        moving = true;
+
+        break;
+      }
+    }
+
+    if (moving) {
+
+      // Don't restore if the player or a block is moving.
+      return;
+    }
+  }
+
   win = false;
 
   last_time = Momo.getTime();
