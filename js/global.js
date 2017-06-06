@@ -45,6 +45,8 @@ let mouse_tile_y = -1;
 
 let win = false;
 
+let debug = false;
+
 let item = 1;
 
 let item_text = "";

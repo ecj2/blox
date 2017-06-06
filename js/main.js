@@ -96,6 +96,12 @@ function restore() {
 
 function update() {
 
+  if (Momo.isKeyPressed(Momo.KEY_D)) {
+
+    // Toggle debug mode.
+    debug = !debug;
+  }
+
   if (Momo.isKeyPressed(Momo.KEY_E)) {
 
     // Toggle edit mode.
@@ -433,6 +439,23 @@ function render() {
   }
 
   Smile.render();
+
+  if (debug) {
+
+    // Show collision markers.
+
+    for (let y = 0; y < tiles_per_screen_y; ++y) {
+
+      for (let x = 0; x < tiles_per_screen_x; ++x) {
+
+        if (Objects.getTileFlag(x, y) == "y") {
+
+          // Surround solid objects with a red outline.
+          Momo.drawRectangle(x * tile_w, y * tile_h, x * tile_w + tile_h, y * tile_w + tile_h, Momo.makeColor(255, 0, 0), 3);
+        }
+      }
+    }
+  }
 
   context.restore();
 
