@@ -98,7 +98,7 @@ function restore() {
 
 function update() {
 
-  if (Momo.isKeyPressed(Momo.KEY_D)) {
+  if (!edit_mode && !win && Momo.isKeyPressed(Momo.KEY_D)) {
 
     // Toggle debug mode.
     debug = !debug;
