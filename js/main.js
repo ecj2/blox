@@ -381,6 +381,12 @@ function update() {
 
     for (let i = 0; i < number_of_blocks; ++i) {
 
+      if (Blocks[i].isMoving()) {
+
+        // Wait for the block to reach its destination before winning.
+        break;
+      }
+
       if (Blocks[i].isOnGoal()) {
 
         ++count;
