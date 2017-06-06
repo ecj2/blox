@@ -37,6 +37,8 @@ function main() {
 
 function save() {
 
+  level_data[level] = exportData();
+
   Smile.save();
 
   for (let i = 0; i < number_of_blocks; ++i) {
@@ -312,7 +314,7 @@ function update() {
 
       restore();
 
-      exportData();
+      console.log(exportData());
     }
 
     if (Momo.isKeyPressed(Momo.KEY_N)) {
@@ -768,7 +770,7 @@ function exportData() {
     }
   }
 
-  console.log(data);
+  return data;
 }
 
 function importData(data) {
