@@ -86,10 +86,10 @@ class Player {
         }
         else {
 
-          if (Objects.getTile(this.x / tile_w, this.y / tile_h - 1) != "04x00y") {
+          if (Objects.getTile(this.x / tile_w, this.y / tile_h - 1) == "03x00y") {
 
             // The player can not move up.
-            //Momo.playSound(sound_error, 1.0, 1.0, false);
+            Momo.playSound(sound_error, 1.0, 1.0, false);
           }
           else {
 
@@ -113,7 +113,7 @@ class Player {
               if (!Blocks[block_number].isPushable(UP)) {
 
                 // The block can not be pushed up.
-                //Momo.playSound(sound_error, 1.0, 1.0, false);
+                Momo.playSound(sound_error, 1.0, 1.0, false);
               }
             }
           }
@@ -147,10 +147,10 @@ class Player {
         }
         else {
 
-          if (Objects.getTile(this.x / tile_w, this.y / tile_h + 1) != "04x00y") {
+          if (Objects.getTile(this.x / tile_w, this.y / tile_h + 1) == "03x00y") {
 
             // The player can not move down.
-            //Momo.playSound(sound_error, 1.0, 1.0, false);
+            Momo.playSound(sound_error, 1.0, 1.0, false);
           }
           else {
 
@@ -174,7 +174,7 @@ class Player {
               if (!Blocks[block_number].isPushable(DOWN)) {
 
                 // The block can not be pushed down.
-                //Momo.playSound(sound_error, 1.0, 1.0, false);
+                Momo.playSound(sound_error, 1.0, 1.0, false);
               }
             }
           }
@@ -208,10 +208,10 @@ class Player {
         }
         else {
 
-          if (Objects.getTile(this.x / tile_w - 1, this.y / tile_h) != "04x00y") {
+          if (Objects.getTile(this.x / tile_w - 1, this.y / tile_h) == "03x00y") {
 
             // The player can not move left.
-            //Momo.playSound(sound_error, 1.0, 1.0, false);
+            Momo.playSound(sound_error, 1.0, 1.0, false);
           }
           else {
 
@@ -235,7 +235,7 @@ class Player {
               if (!Blocks[block_number].isPushable(LEFT)) {
 
                 // The block can not be pushed left.
-                //Momo.playSound(sound_error, 1.0, 1.0, false);
+                Momo.playSound(sound_error, 1.0, 1.0, false);
               }
             }
           }
@@ -269,10 +269,10 @@ class Player {
         }
         else {
 
-          if (Objects.getTile(this.x / tile_w + 1, this.y / tile_h) != "04x00y") {
+          if (Objects.getTile(this.x / tile_w + 1, this.y / tile_h) == "03x00y") {
 
             // The player can not move right.
-            //Momo.playSound(sound_error, 1.0, 1.0, false);
+            Momo.playSound(sound_error, 1.0, 1.0, false);
           }
           else {
 
@@ -296,7 +296,7 @@ class Player {
               if (!Blocks[block_number].isPushable(RIGHT)) {
 
                 // The block can not be pushed right.
-                //Momo.playSound(sound_error, 1.0, 1.0, false);
+                Momo.playSound(sound_error, 1.0, 1.0, false);
               }
             }
           }

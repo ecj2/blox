@@ -55,7 +55,7 @@ class Block {
 
         this.play_sound = false;
 
-        //Momo.playSound(sound_push, 0.35, 1.0, false);
+        Momo.playSound(sound_push, 0.35, 1.0, false);
       }
     }
 
