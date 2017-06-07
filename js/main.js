@@ -117,6 +117,8 @@ function update() {
     }
     else {
 
+      last_time = Momo.getTime();
+
       save();
 
       Momo.showMouseCursor();
