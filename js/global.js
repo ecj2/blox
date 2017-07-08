@@ -53,6 +53,8 @@ let item_text = "";
 
 let level = -1;
 
+let fail = false;
+
 let last_time = 0;
 
 let time_difference = 0;
@@ -77,3 +79,5 @@ for (let i = 0; i < 999; ++i) {
 let state = 0;
 
 let selection = 0;
+
+const allowed_moves = [30, 32, 57, 69, 69, 92, 90, 64, 135, 68];

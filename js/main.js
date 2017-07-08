@@ -94,6 +94,8 @@ function restore() {
     undo_block_x[i] = [];
     undo_block_y[i] = [];
   }
+
+  fail = false;
 }
 
 function update() {
@@ -133,7 +135,7 @@ function update() {
       }
     break;
 
-    case 1:
+    case 1: case 2:
 
       // Normal mode.
 
@@ -348,7 +350,16 @@ function update() {
 
         if (Momo.isKeyPressed(Momo.KEY_R)) {
 
-          restore();
+          if (fail) {
+
+            --level;
+
+            loadNextLevel();
+          }
+          else {
+
+            restore();
+          }
         }
 
         if (Momo.isKeyPressed(Momo.KEY_TILDE)) {
@@ -363,7 +374,7 @@ function update() {
           loadNextLevel();
         }
 
-        if (!win) {
+        if (!win && !fail) {
 
           if (Momo.isKeyPressed(Momo.KEY_Z)) {
 
@@ -459,6 +470,13 @@ function update() {
       for (let i = 0; i < number_of_blocks; ++i) {
 
         Blocks[i].update();
+      }
+
+      if (!Smile.isMoving() && state == 2 && !fail && moves_counter > allowed_moves[level]) {
+
+        fail = true;
+
+        Momo.playSound(sound_error, 1.0, 1.0, false);
       }
     break;
   }
@@ -577,7 +595,7 @@ function render() {
       );
     break;
 
-    case 1:
+    case 1: case 2:
 
       // Normal mode.
       let context = Momo.canvas.context;
@@ -622,7 +640,44 @@ function render() {
         Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, 8, -21, Momo.TEXT_ALIGN_LEFT, level + 1);
 
         // Draw number of moves player has made.
-        Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, Momo.getCanvasWidth() - 8, -21, Momo.TEXT_ALIGN_RIGHT, moves_counter);
+        if (state == 2) {
+
+          Momo.drawText(
+
+            font_pixel,
+
+            Momo.makeColor(255, 255, 255),
+
+            64,
+
+            Momo.getCanvasWidth() - 8,
+
+            -21,
+
+            Momo.TEXT_ALIGN_RIGHT,
+
+            moves_counter + "/" + allowed_moves[level]
+          );
+        }
+        else {
+
+          Momo.drawText(
+
+            font_pixel,
+
+            Momo.makeColor(255, 255, 255),
+
+            64,
+
+            Momo.getCanvasWidth() - 8,
+
+            -21,
+
+            Momo.TEXT_ALIGN_RIGHT,
+
+            moves_counter
+          );
+        }
       }
 
       if (win) {
@@ -724,6 +779,108 @@ function render() {
           Momo.TEXT_ALIGN_CENTER,
 
           "Press \"R\" to play again or \"SPACE\" to continue."
+        );
+
+        context.restore();
+      }
+
+      if (fail) {
+
+        for (let y = 0; y < tiles_per_screen_y; ++y) {
+
+          for (let x = 0; x < tiles_per_screen_x; ++x) {
+
+            // Draw a dark background.
+            Momo.drawPartialImage(
+
+              image_tiles,
+
+              tile_w,
+
+              0,
+
+              tile_w,
+
+              tile_h,
+
+              tile_w * x,
+
+              tile_h * y
+            );
+          }
+        }
+
+        // Draw a half dark overlay.
+        Momo.drawFilledRectangle(
+
+          0,
+
+          0,
+
+          Momo.getCanvasWidth(),
+
+          Momo.getCanvasHeight(),
+
+          Momo.makeColor(0, 0, 0, 128)
+        );
+
+        context.save();
+
+        context.translate(0, Momo.getCanvasHeight() / 4);
+
+        Momo.drawText(
+
+          font_pixel,
+
+          Momo.makeColor(255, 255, 255),
+
+          64,
+
+          Momo.getCanvasWidth() / 2,
+
+          -21,
+
+          Momo.TEXT_ALIGN_CENTER,
+
+          "- Failure -"
+        );
+
+        let results_text = "";
+
+        results_text += "You failed to solve level #" + (level + 1) + " within " + allowed_moves[level] + " moves."
+
+        Momo.drawText(
+
+          font_pixel,
+
+          Momo.makeColor(255, 255, 255),
+
+          48,
+
+          Momo.getCanvasWidth() / 2,
+
+          Momo.getCanvasHeight() / 4 - 48,
+
+          Momo.TEXT_ALIGN_CENTER,
+
+          results_text
+        );
+
+        Momo.drawText(
+
+          font_pixel,
+
+          Momo.makeColor(255, 255, 255),
+
+          48,
+
+          Momo.getCanvasWidth() / 2,
+
+          Momo.getCanvasHeight() / 4 + 48 / 2,
+
+          Momo.TEXT_ALIGN_CENTER,
+
+          "Press \"R\" to try again or \"ESCAPE\" to go back."
         );
 
         context.restore();
