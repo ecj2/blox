@@ -73,3 +73,7 @@ for (let i = 0; i < 999; ++i) {
   undo_block_x[i] = [i];
   undo_block_y[i] = [i];
 }
+
+let state = 0;
+
+let selection = 0;

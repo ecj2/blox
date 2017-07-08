@@ -98,328 +98,376 @@ function restore() {
 
 function update() {
 
-  if (!edit_mode && !win && Momo.isKeyPressed(Momo.KEY_D)) {
+  switch (state) {
 
-    // Toggle debug mode.
-    debug = !debug;
-  }
+    case 0:
 
-  if (Momo.isKeyPressed(Momo.KEY_E)) {
+      // Main menu.
 
-    // Toggle edit mode.
-    edit_mode = !edit_mode;
+      if (Momo.isKeyPressed(Momo.KEY_UP)) {
 
-    if (edit_mode) {
+        --selection;
 
-      restore();
+        if (selection < 0) {
 
-      Momo.hideMouseCursor();
-    }
-    else {
+          selection = 1;
+        }
+      }
+      else if (Momo.isKeyPressed(Momo.KEY_DOWN)) {
 
-      last_time = Momo.getTime();
+        ++selection;
 
-      save();
+        if (selection > 1) {
 
-      Momo.showMouseCursor();
-    }
-  }
+          selection = 0;
+        }
+      }
+      else if (Momo.isKeyPressed(Momo.KEY_SPACE)) {
 
-  if (edit_mode) {
+        // Make mode selection.
+        state = selection + 1;
 
-    if (Momo.isKeyPressed(Momo.KEY_DELETE)) {
+        // Start the selected mode from the first level.
+        level = -1;
+        loadNextLevel();
+      }
+    break;
 
-      level = level_data.length;
+    case 1:
 
-      for (let y = 0; y < tiles_per_screen_y; ++y) {
+      // Normal mode.
 
-        for (let x = 0; x < tiles_per_screen_x; ++x) {
+      if (!edit_mode && !win && Momo.isKeyPressed(Momo.KEY_D)) {
 
-          // Clear the objects layer.
-          Objects.setTile(x, y, "00x00n");
+        // Toggle debug mode.
+        debug = !debug;
+      }
 
-          // Clear the background layer with dark tiles.
-          Background.setTile(x, y, "01x00n");
+      if (Momo.isKeyPressed(Momo.KEY_E)) {
 
-          if (y == 0 || y == tiles_per_screen_y - 1 || x == 0 || x == tiles_per_screen_x - 1) {
+        // Toggle edit mode.
+        edit_mode = !edit_mode;
 
-            // Surround the objects layer with a solid border.
-            Objects.setTile(x, y,  "03x00y");
-          }
+        if (edit_mode) {
+
+          restore();
+
+          Momo.hideMouseCursor();
+        }
+        else {
+
+          last_time = Momo.getTime();
+
+          save();
+
+          Momo.showMouseCursor();
         }
       }
 
-      // Move the player toward the center of the screen.
-      Smile.setX(12 * tile_w);
-      Smile.setY(7 * tile_h);
+      if (edit_mode) {
 
-      number_of_blocks = 1;
+        if (Momo.isKeyPressed(Momo.KEY_DELETE)) {
 
-      Blocks = [];
-
-      Blocks[0] = new Block();
-
-      // Spawn a single block.
-      Blocks[0].setX(Smile.getX() + tile_w);
-      Blocks[0].setY(Smile.getY());
-
-      // Place a default goal.
-      Background.setTile((Smile.getX() + tile_w) / tile_w, (Smile.getY() + tile_h) / tile_h, "05x00n");
-
-      save();
-    }
-
-    if (Momo.isKeyPressed(Momo.KEY_A)) {
-
-      --item;
-    }
-    else if (Momo.isKeyPressed(Momo.KEY_D)) {
-
-      ++item;
-    }
-
-    if (item < 1) {
-
-      item = 6;
-    }
-    else if (item > 6) {
-
-      item = 1;
-    }
-
-    // Generate a name for the current item.
-    switch (item) {
-
-      case 1:
-
-        item_text = "eraser";
-      break;
-
-      case 2:
-
-        item_text = "tile";
-      break;
-
-      case 3:
-
-        item_text = "wall";
-      break;
-
-      case 4:
-
-        item_text = "block";
-      break;
-
-      case 5:
-
-        item_text = "goal";
-      break;
-
-      case 6:
-
-        item_text = "player";
-      break;
-    }
-
-    // Get the mouse's position on the tile grid.
-    mouse_tile_x = parseInt((Momo.getMouseX() / tile_w - 0.5).toFixed(0));
-    mouse_tile_y = parseInt((Momo.getMouseY() / tile_h - 0.5).toFixed(0));
-
-    if (mouse_tile_x < 1) {
-
-      mouse_tile_x = 0;
-    }
-    else if (mouse_tile_x > tiles_per_screen_x - 1) {
-
-      mouse_tile_x = tiles_per_screen_x - 1;
-    }
-
-    if (mouse_tile_y < 1) {
-
-      mouse_tile_y = 0;
-    }
-    else if (mouse_tile_y > tiles_per_screen_y - 1) {
-
-      mouse_tile_y = tiles_per_screen_y - 1;
-    }
-
-    if (Momo.isMouseButtonDown(Momo.MOUSE_BUTTON_LEFT)) {
-
-      if (item == BLOCK) {
-
-        for (let i = 0; i < number_of_blocks; ++i) {
-
-          if (Blocks[i].getX() == (mouse_tile_x + 1) * tile_w && Blocks[i].getY() == (mouse_tile_y + 1) * tile_h) {
-
-            // A block already exists here.
-            return;
-          }
-        }
-
-        ++number_of_blocks;
-
-        Blocks[number_of_blocks - 1] = new Block();
-
-        // Place a new block.
-        Blocks[number_of_blocks - 1].setX((mouse_tile_x + 1) * tile_w);
-        Blocks[number_of_blocks - 1].setY((mouse_tile_y + 1) * tile_h);
-
-        // Erase the tile on the objects layer.
-        Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
-      }
-      else if (item == ERASER) {
-
-        eraseBlock();
-      }
-      else if (item == PLAYER) {
-
-        // Set the player's spawn point.
-        Smile.setX((mouse_tile_x + 1) * tile_w);
-        Smile.setY((mouse_tile_y + 1) * tile_h);
-      }
-      else if (item == WALL) {
-
-        eraseBlock();
-
-        // Place the wall on the objects layer.
-        Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "0" + item + "x00y");
-
-        if (Background.getTile(mouse_tile_x + 1, mouse_tile_y + 1) == "05x00n") {
-
-          // Clear the tile beneath the object on the background layer.
-          Background.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
-        }
-      }
-      else {
-
-        eraseBlock();
-
-        // Place the item on the background layer.
-        Background.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "0" + item + "x00n");
-
-        if (Objects.getTileFlag(mouse_tile_x + 1, mouse_tile_y + 1) == "y") {
-
-          // Erase the tile from the objects layer.
-          Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
-        }
-      }
-    }
-  }
-  else {
-
-    if (Momo.isKeyPressed(Momo.KEY_R)) {
-
-      restore();
-    }
-
-    if (Momo.isKeyPressed(Momo.KEY_TILDE)) {
-
-      restore();
-
-      console.log(exportData());
-    }
-
-    if (Momo.isKeyPressed(Momo.KEY_N)) {
-
-      loadNextLevel();
-    }
-
-    if (!win) {
-
-      if (Momo.isKeyPressed(Momo.KEY_Z)) {
-
-        if (moves > 0) {
-
-          for (let i = 0; i < number_of_blocks; ++i) {
-
-            if (Blocks[i].isMoving()) {
-
-              // Moves can only be undone if the blocks are stationary.
-              return;
-            }
-          }
-
-          if (Smile.isMoving()) {
-
-            // Moves can only be undone if the player is stationary.
-            return;
-          }
-
-          --moves;
-
-          // Undo player's last move.
-          Smile.setX(undo_player_x[moves] * tile_w);
-          Smile.setY(undo_player_y[moves] * tile_h);
-
-          for (let i = 0; i < number_of_blocks; ++i) {
-
-            if (undo_block_x[i][moves] != undefined || undo_block_y[i][moves] != undefined) {
-
-              // Undo blocks' last moves.
-              Blocks[i].setX(undo_block_x[i][moves] * tile_w);
-              Blocks[i].setY(undo_block_y[i][moves] * tile_h);
-            }
-
-            for (let j = moves; j < undo_block_x.length; ++j) {
-
-              // Delete outdated undo coordinates, as there is no "redo" function.
-              undo_block_x[i][j] = undefined;
-              undo_block_y[i][j] = undefined;
-            }
-          }
+          level = level_data.length;
 
           for (let y = 0; y < tiles_per_screen_y; ++y) {
 
             for (let x = 0; x < tiles_per_screen_x; ++x) {
 
-              if (Objects.getTile(x, y) == "04x00y") {
+              // Clear the objects layer.
+              Objects.setTile(x, y, "00x00n");
 
-                // Remove the block markers from the objects layer.
-                Objects.setTile(x, y, "00x00n");
+              // Clear the background layer with dark tiles.
+              Background.setTile(x, y, "01x00n");
+
+              if (y == 0 || y == tiles_per_screen_y - 1 || x == 0 || x == tiles_per_screen_x - 1) {
+
+                // Surround the objects layer with a solid border.
+                Objects.setTile(x, y,  "03x00y");
               }
             }
           }
 
-          ++moves_counter;
+          // Move the player toward the center of the screen.
+          Smile.setX(12 * tile_w);
+          Smile.setY(7 * tile_h);
+
+          number_of_blocks = 1;
+
+          Blocks = [];
+
+          Blocks[0] = new Block();
+
+          // Spawn a single block.
+          Blocks[0].setX(Smile.getX() + tile_w);
+          Blocks[0].setY(Smile.getY());
+
+          // Place a default goal.
+          Background.setTile((Smile.getX() + tile_w) / tile_w, (Smile.getY() + tile_h) / tile_h, "05x00n");
+
+          save();
+        }
+
+        if (Momo.isKeyPressed(Momo.KEY_A)) {
+
+          --item;
+        }
+        else if (Momo.isKeyPressed(Momo.KEY_D)) {
+
+          ++item;
+        }
+
+        if (item < 1) {
+
+          item = 6;
+        }
+        else if (item > 6) {
+
+          item = 1;
+        }
+
+        // Generate a name for the current item.
+        switch (item) {
+
+          case 1:
+
+            item_text = "eraser";
+          break;
+
+          case 2:
+
+            item_text = "tile";
+          break;
+
+          case 3:
+
+            item_text = "wall";
+          break;
+
+          case 4:
+
+            item_text = "block";
+          break;
+
+          case 5:
+
+            item_text = "goal";
+          break;
+
+          case 6:
+
+            item_text = "player";
+          break;
+        }
+
+        // Get the mouse's position on the tile grid.
+        mouse_tile_x = parseInt((Momo.getMouseX() / tile_w - 0.5).toFixed(0));
+        mouse_tile_y = parseInt((Momo.getMouseY() / tile_h - 0.5).toFixed(0));
+
+        if (mouse_tile_x < 1) {
+
+          mouse_tile_x = 0;
+        }
+        else if (mouse_tile_x > tiles_per_screen_x - 1) {
+
+          mouse_tile_x = tiles_per_screen_x - 1;
+        }
+
+        if (mouse_tile_y < 1) {
+
+          mouse_tile_y = 0;
+        }
+        else if (mouse_tile_y > tiles_per_screen_y - 1) {
+
+          mouse_tile_y = tiles_per_screen_y - 1;
+        }
+
+        if (Momo.isMouseButtonDown(Momo.MOUSE_BUTTON_LEFT)) {
+
+          if (item == BLOCK) {
+
+            for (let i = 0; i < number_of_blocks; ++i) {
+
+              if (Blocks[i].getX() == (mouse_tile_x + 1) * tile_w && Blocks[i].getY() == (mouse_tile_y + 1) * tile_h) {
+
+                // A block already exists here.
+                return;
+              }
+            }
+
+            ++number_of_blocks;
+
+            Blocks[number_of_blocks - 1] = new Block();
+
+            // Place a new block.
+            Blocks[number_of_blocks - 1].setX((mouse_tile_x + 1) * tile_w);
+            Blocks[number_of_blocks - 1].setY((mouse_tile_y + 1) * tile_h);
+
+            // Erase the tile on the objects layer.
+            Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
+          }
+          else if (item == ERASER) {
+
+            eraseBlock();
+          }
+          else if (item == PLAYER) {
+
+            // Set the player's spawn point.
+            Smile.setX((mouse_tile_x + 1) * tile_w);
+            Smile.setY((mouse_tile_y + 1) * tile_h);
+          }
+          else if (item == WALL) {
+
+            eraseBlock();
+
+            // Place the wall on the objects layer.
+            Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "0" + item + "x00y");
+
+            if (Background.getTile(mouse_tile_x + 1, mouse_tile_y + 1) == "05x00n") {
+
+              // Clear the tile beneath the object on the background layer.
+              Background.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
+            }
+          }
+          else {
+
+            eraseBlock();
+
+            // Place the item on the background layer.
+            Background.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "0" + item + "x00n");
+
+            if (Objects.getTileFlag(mouse_tile_x + 1, mouse_tile_y + 1) == "y") {
+
+              // Erase the tile from the objects layer.
+              Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
+            }
+          }
+        }
+      }
+      else {
+
+        if (Momo.isKeyPressed(Momo.KEY_R)) {
+
+          restore();
+        }
+
+        if (Momo.isKeyPressed(Momo.KEY_TILDE)) {
+
+          restore();
+
+          console.log(exportData());
+        }
+
+        if (Momo.isKeyPressed(Momo.KEY_N)) {
+
+          loadNextLevel();
+        }
+
+        if (!win) {
+
+          if (Momo.isKeyPressed(Momo.KEY_Z)) {
+
+            if (moves > 0) {
+
+              for (let i = 0; i < number_of_blocks; ++i) {
+
+                if (Blocks[i].isMoving()) {
+
+                  // Moves can only be undone if the blocks are stationary.
+                  return;
+                }
+              }
+
+              if (Smile.isMoving()) {
+
+                // Moves can only be undone if the player is stationary.
+                return;
+              }
+
+              --moves;
+
+              // Undo player's last move.
+              Smile.setX(undo_player_x[moves] * tile_w);
+              Smile.setY(undo_player_y[moves] * tile_h);
+
+              for (let i = 0; i < number_of_blocks; ++i) {
+
+                if (undo_block_x[i][moves] != undefined || undo_block_y[i][moves] != undefined) {
+
+                  // Undo blocks' last moves.
+                  Blocks[i].setX(undo_block_x[i][moves] * tile_w);
+                  Blocks[i].setY(undo_block_y[i][moves] * tile_h);
+                }
+
+                for (let j = moves; j < undo_block_x.length; ++j) {
+
+                  // Delete outdated undo coordinates, as there is no "redo" function.
+                  undo_block_x[i][j] = undefined;
+                  undo_block_y[i][j] = undefined;
+                }
+              }
+
+              for (let y = 0; y < tiles_per_screen_y; ++y) {
+
+                for (let x = 0; x < tiles_per_screen_x; ++x) {
+
+                  if (Objects.getTile(x, y) == "04x00y") {
+
+                    // Remove the block markers from the objects layer.
+                    Objects.setTile(x, y, "00x00n");
+                  }
+                }
+              }
+
+              ++moves_counter;
+            }
+          }
+
+          Smile.update();
+        }
+
+        let count = 0;
+
+        for (let i = 0; i < number_of_blocks; ++i) {
+
+          if (Blocks[i].isMoving()) {
+
+            // Wait for the block to reach its destination before winning.
+            break;
+          }
+
+          if (Blocks[i].isOnGoal()) {
+
+            ++count;
+          }
+        }
+
+        if (!win && count > 0 && count == number_of_blocks) {
+
+          // The current puzzle has been completed.
+          win = true;
+
+          time_difference = (Momo.getTime() - last_time).toFixed(0);
+        }
+
+        if (win && Momo.isKeyPressed(Momo.KEY_SPACE)) {
+
+          loadNextLevel();
         }
       }
 
-      Smile.update();
-    }
+      for (let i = 0; i < number_of_blocks; ++i) {
 
-    let count = 0;
-
-    for (let i = 0; i < number_of_blocks; ++i) {
-
-      if (Blocks[i].isMoving()) {
-
-        // Wait for the block to reach its destination before winning.
-        break;
+        Blocks[i].update();
       }
-
-      if (Blocks[i].isOnGoal()) {
-
-        ++count;
-      }
-    }
-
-    if (!win && count > 0 && count == number_of_blocks) {
-
-      // The current puzzle has been completed.
-      win = true;
-
-      time_difference = (Momo.getTime() - last_time).toFixed(0);
-    }
-
-    if (win && Momo.isKeyPressed(Momo.KEY_SPACE)) {
-
-      loadNextLevel();
-    }
+    break;
   }
 
-  for (let i = 0; i < number_of_blocks; ++i) {
+  if (Momo.isKeyPressed(Momo.KEY_ESCAPE)) {
 
-    Blocks[i].update();
+    // Return to main menu.
+    state = 0;
+    selection = 0;
   }
 }
 
@@ -427,158 +475,265 @@ function render() {
 
   Momo.clearCanvas(Momo.makeColor(0, 0, 0));
 
-  let context = Momo.canvas.context;
+  switch (state) {
 
-  context.save();
+    case 0:
 
-  // Offset the view to obscure the solid boundaries.
-  context.translate(-tile_w, -tile_h);
+      // Main menu.
+      for (let y = 0; y < tiles_per_screen_y; ++y) {
 
-  Background.render();
-  Objects.render();
+        for (let x = 0; x < tiles_per_screen_x; ++x) {
 
-  for (let i = 0; i < number_of_blocks; ++i) {
+          // Draw a dark background.
+          Momo.drawPartialImage(
 
-    Blocks[i].render();
-  }
+            image_tiles,
 
-  Smile.render();
+            tile_w,
 
-  if (debug) {
+            0,
 
-    // Show collision markers.
+            tile_w,
 
-    for (let y = 0; y < tiles_per_screen_y; ++y) {
+            tile_h,
 
-      for (let x = 0; x < tiles_per_screen_x; ++x) {
+            tile_w * x,
 
-        if (Objects.getTileFlag(x, y) == "y") {
-
-          // Surround solid objects with a red outline.
-          Momo.drawRectangle(x * tile_w, y * tile_h, x * tile_w + tile_h, y * tile_w + tile_h, Momo.makeColor(255, 0, 0), 3);
+            tile_h * y
+          );
         }
       }
-    }
-  }
 
-  context.restore();
+      // Draw the name of the game.
+      Momo.drawText(
 
-  if (!edit_mode) {
+        font_pixel,
 
-    // Draw the current level number.
-    Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, 8, -21, Momo.TEXT_ALIGN_LEFT, level + 1);
+        Momo.makeColor(255, 255, 255),
 
-    // Draw number of moves player has made.
-    Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, Momo.getCanvasWidth() - 8, -21, Momo.TEXT_ALIGN_RIGHT, moves_counter);
-  }
+        64 + 16,
 
-  if (win) {
+        Momo.getCanvasWidth() / 2,
 
-    for (let y = 0; y < tiles_per_screen_y; ++y) {
+        -21 + 64,
 
-      for (let x = 0; x < tiles_per_screen_x; ++x) {
+        Momo.TEXT_ALIGN_CENTER,
 
-        // Draw a dark background.
-        Momo.drawPartialImage(
+        "Blox"
+      );
 
-          image_tiles,
+      // Draw the first selection.
+      Momo.drawText(
 
-          tile_w,
+        font_pixel,
+
+        (selection == 0 ? Momo.makeColor(255, 255, 0) : Momo.makeColor(255, 255, 255)),
+
+        64,
+
+        Momo.getCanvasWidth() / 2,
+
+        -21 + 64 * 3,
+
+        Momo.TEXT_ALIGN_CENTER,
+
+        (selection == 0 ? "> Normal Mode <" : "Normal Mode")
+      );
+
+      // Draw the second selection.
+      Momo.drawText(
+
+        font_pixel,
+
+        (selection == 1 ? Momo.makeColor(255, 255, 0) : Momo.makeColor(255, 255, 255)),
+
+        64,
+
+        Momo.getCanvasWidth() / 2,
+
+        -21 + (64 * 4),
+
+        Momo.TEXT_ALIGN_CENTER,
+
+        (selection == 1 ? "> Challenge Mode <" : "Challenge Mode")
+      );
+
+      // Draw some instructions.
+      Momo.drawText(
+
+        font_pixel,
+
+        Momo.makeColor(255, 255, 255),
+
+        48,
+
+        Momo.getCanvasWidth() / 2,
+
+        -21 + (64 * 6),
+
+        Momo.TEXT_ALIGN_CENTER,
+
+        "Press \"SPACE\" to confirm selection."
+      );
+    break;
+
+    case 1:
+
+      // Normal mode.
+      let context = Momo.canvas.context;
+
+      context.save();
+
+      // Offset the view to obscure the solid boundaries.
+      context.translate(-tile_w, -tile_h);
+
+      Background.render();
+      Objects.render();
+
+      for (let i = 0; i < number_of_blocks; ++i) {
+
+        Blocks[i].render();
+      }
+
+      Smile.render();
+
+      if (debug) {
+
+        // Show collision markers.
+
+        for (let y = 0; y < tiles_per_screen_y; ++y) {
+
+          for (let x = 0; x < tiles_per_screen_x; ++x) {
+
+            if (Objects.getTileFlag(x, y) == "y") {
+
+              // Surround solid objects with a red outline.
+              Momo.drawRectangle(x * tile_w, y * tile_h, x * tile_w + tile_h, y * tile_w + tile_h, Momo.makeColor(255, 0, 0), 3);
+            }
+          }
+        }
+      }
+
+      context.restore();
+
+      if (!edit_mode) {
+
+        // Draw the current level number.
+        Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, 8, -21, Momo.TEXT_ALIGN_LEFT, level + 1);
+
+        // Draw number of moves player has made.
+        Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, Momo.getCanvasWidth() - 8, -21, Momo.TEXT_ALIGN_RIGHT, moves_counter);
+      }
+
+      if (win) {
+
+        for (let y = 0; y < tiles_per_screen_y; ++y) {
+
+          for (let x = 0; x < tiles_per_screen_x; ++x) {
+
+            // Draw a dark background.
+            Momo.drawPartialImage(
+
+              image_tiles,
+
+              tile_w,
+
+              0,
+
+              tile_w,
+
+              tile_h,
+
+              tile_w * x,
+
+              tile_h * y
+            );
+          }
+        }
+
+        // Draw a half dark overlay.
+        Momo.drawFilledRectangle(
 
           0,
 
-          tile_w,
+          0,
 
-          tile_h,
+          Momo.getCanvasWidth(),
 
-          tile_w * x,
+          Momo.getCanvasHeight(),
 
-          tile_h * y
+          Momo.makeColor(0, 0, 0, 128)
         );
+
+        context.save();
+
+        context.translate(0, Momo.getCanvasHeight() / 4);
+
+        Momo.drawText(
+
+          font_pixel,
+
+          Momo.makeColor(255, 255, 255),
+
+          64,
+
+          Momo.getCanvasWidth() / 2,
+
+          -21,
+
+          Momo.TEXT_ALIGN_CENTER,
+
+          "- Level #" + (parseInt(level) + 1) + " Results -"
+        );
+
+        let results_text = "";
+
+        results_text += "Solved in " + time_difference;
+        results_text += " " + (time_difference == 1 ? "second" : "seconds");
+        results_text += " with " + moves_counter + " " + (moves == 1 ? "move" : "moves") + ".";
+
+        Momo.drawText(
+
+          font_pixel,
+
+          Momo.makeColor(255, 255, 255),
+
+          48,
+
+          Momo.getCanvasWidth() / 2,
+
+          Momo.getCanvasHeight() / 4 - 48,
+
+          Momo.TEXT_ALIGN_CENTER,
+
+          results_text
+        );
+
+        Momo.drawText(
+
+          font_pixel,
+
+          Momo.makeColor(255, 255, 255),
+
+          48,
+
+          Momo.getCanvasWidth() / 2,
+
+          Momo.getCanvasHeight() / 4 + 48 / 2,
+
+          Momo.TEXT_ALIGN_CENTER,
+
+          "Press \"R\" to play again or \"SPACE\" to continue."
+        );
+
+        context.restore();
       }
-    }
 
-    // Draw a half dark overlay.
-    Momo.drawFilledRectangle(
+      if (edit_mode) {
 
-      0,
-
-      0,
-
-      Momo.getCanvasWidth(),
-
-      Momo.getCanvasHeight(),
-
-      Momo.makeColor(0, 0, 0, 128)
-    );
-
-    context.save();
-
-    context.translate(0, Momo.getCanvasHeight() / 4);
-
-    Momo.drawText(
-
-      font_pixel,
-
-      Momo.makeColor(255, 255, 255),
-
-      64,
-
-      Momo.getCanvasWidth() / 2,
-
-      -21,
-
-      Momo.TEXT_ALIGN_CENTER,
-
-      "- Level #" + (parseInt(level) + 1) + " Results -"
-    );
-
-    let results_text = "";
-
-    results_text += "Solved in " + time_difference;
-    results_text += " " + (time_difference == 1 ? "second" : "seconds");
-    results_text += " with " + moves_counter + " " + (moves == 1 ? "move" : "moves") + ".";
-
-    Momo.drawText(
-
-      font_pixel,
-
-      Momo.makeColor(255, 255, 255),
-
-      48,
-
-      Momo.getCanvasWidth() / 2,
-
-      Momo.getCanvasHeight() / 4 - 48,
-
-      Momo.TEXT_ALIGN_CENTER,
-
-      results_text
-    );
-
-    Momo.drawText(
-
-      font_pixel,
-
-      Momo.makeColor(255, 255, 255),
-
-      48,
-
-      Momo.getCanvasWidth() / 2,
-
-      Momo.getCanvasHeight() / 4 + 48 / 2,
-
-      Momo.TEXT_ALIGN_CENTER,
-
-      "Press \"R\" to play again or \"SPACE\" to continue."
-    );
-
-    context.restore();
-  }
-
-  if (edit_mode) {
-
-    drawEditor();
+        drawEditor();
+      }
+    break;
   }
 }
 
