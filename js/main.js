@@ -16,6 +16,9 @@ function main() {
 
   Momo.setFrameRate(60);
 
+  Momo.installMouse();
+  Momo.installKeyboard();
+
   loadResources();
 
   Momo.resourcesLoaded(
@@ -106,7 +109,7 @@ function update() {
 
       // Main menu.
 
-      if (Momo.isKeyPressed(Momo.KEY_UP)) {
+      if (Momo.isKeyPressed("up")) {
 
         --selection;
 
@@ -115,7 +118,7 @@ function update() {
           selection = 1;
         }
       }
-      else if (Momo.isKeyPressed(Momo.KEY_DOWN)) {
+      else if (Momo.isKeyPressed("down")) {
 
         ++selection;
 
@@ -124,7 +127,7 @@ function update() {
           selection = 0;
         }
       }
-      else if (Momo.isKeyPressed(Momo.KEY_SPACE)) {
+      else if (Momo.isKeyPressed("space")) {
 
         // Make mode selection.
         state = selection + 1;
@@ -139,13 +142,13 @@ function update() {
 
       // Normal mode.
 
-      if (!edit_mode && !win && Momo.isKeyPressed(Momo.KEY_D)) {
+      if (!edit_mode && !win && Momo.isKeyPressed("d")) {
 
         // Toggle debug mode.
         debug = !debug;
       }
 
-      if (Momo.isKeyPressed(Momo.KEY_E)) {
+      if (Momo.isKeyPressed("e")) {
 
         // Toggle edit mode.
         edit_mode = !edit_mode;
@@ -168,7 +171,7 @@ function update() {
 
       if (edit_mode) {
 
-        if (Momo.isKeyPressed(Momo.KEY_DELETE)) {
+        if (Momo.isKeyPressed("delete")) {
 
           level = level_data.length;
 
@@ -182,7 +185,7 @@ function update() {
               // Clear the background layer with dark tiles.
               Background.setTile(x, y, "01x00n");
 
-              if (y == 0 || y == tiles_per_screen_y - 1 || x == 0 || x == tiles_per_screen_x - 1) {
+              if (y === 0 || y === tiles_per_screen_y - 1 || x === 0 || x === tiles_per_screen_x - 1) {
 
                 // Surround the objects layer with a solid border.
                 Objects.setTile(x, y,  "03x00y");
@@ -210,11 +213,11 @@ function update() {
           save();
         }
 
-        if (Momo.isKeyPressed(Momo.KEY_A)) {
+        if (Momo.isKeyPressed("a")) {
 
           --item;
         }
-        else if (Momo.isKeyPressed(Momo.KEY_D)) {
+        else if (Momo.isKeyPressed("d")) {
 
           ++item;
         }
@@ -284,13 +287,13 @@ function update() {
           mouse_tile_y = tiles_per_screen_y - 1;
         }
 
-        if (Momo.isMouseButtonDown(Momo.MOUSE_BUTTON_LEFT)) {
+        if (Momo.isMouseButtonDown("left")) {
 
-          if (item == BLOCK) {
+          if (item === BLOCK) {
 
             for (let i = 0; i < number_of_blocks; ++i) {
 
-              if (Blocks[i].getX() == (mouse_tile_x + 1) * tile_w && Blocks[i].getY() == (mouse_tile_y + 1) * tile_h) {
+              if (Blocks[i].getX() === (mouse_tile_x + 1) * tile_w && Blocks[i].getY() === (mouse_tile_y + 1) * tile_h) {
 
                 // A block already exists here.
                 return;
@@ -308,24 +311,24 @@ function update() {
             // Erase the tile on the objects layer.
             Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
           }
-          else if (item == ERASER) {
+          else if (item === ERASER) {
 
             eraseBlock();
           }
-          else if (item == PLAYER) {
+          else if (item === PLAYER) {
 
             // Set the player's spawn point.
             Smile.setX((mouse_tile_x + 1) * tile_w);
             Smile.setY((mouse_tile_y + 1) * tile_h);
           }
-          else if (item == WALL) {
+          else if (item === WALL) {
 
             eraseBlock();
 
             // Place the wall on the objects layer.
             Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "0" + item + "x00y");
 
-            if (Background.getTile(mouse_tile_x + 1, mouse_tile_y + 1) == "05x00n") {
+            if (Background.getTile(mouse_tile_x + 1, mouse_tile_y + 1) === "05x00n") {
 
               // Clear the tile beneath the object on the background layer.
               Background.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
@@ -338,7 +341,7 @@ function update() {
             // Place the item on the background layer.
             Background.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "0" + item + "x00n");
 
-            if (Objects.getTileFlag(mouse_tile_x + 1, mouse_tile_y + 1) == "y") {
+            if (Objects.getTileFlag(mouse_tile_x + 1, mouse_tile_y + 1) === "y") {
 
               // Erase the tile from the objects layer.
               Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
@@ -348,7 +351,7 @@ function update() {
       }
       else {
 
-        if (Momo.isKeyPressed(Momo.KEY_R)) {
+        if (Momo.isKeyPressed("r")) {
 
           if (fail) {
 
@@ -362,21 +365,21 @@ function update() {
           }
         }
 
-        if (Momo.isKeyPressed(Momo.KEY_TILDE)) {
+        if (Momo.isKeyPressed("tilde")) {
 
           restore();
 
           console.log(exportData());
         }
 
-        if (Momo.isKeyPressed(Momo.KEY_N)) {
+        if (Momo.isKeyPressed("n")) {
 
           loadNextLevel();
         }
 
         if (!win && !fail) {
 
-          if (Momo.isKeyPressed(Momo.KEY_Z)) {
+          if (Momo.isKeyPressed("z")) {
 
             if (moves > 0) {
 
@@ -403,7 +406,7 @@ function update() {
 
               for (let i = 0; i < number_of_blocks; ++i) {
 
-                if (undo_block_x[i][moves] != undefined || undo_block_y[i][moves] != undefined) {
+                if (undo_block_x[i][moves] !== undefined || undo_block_y[i][moves] !== undefined) {
 
                   // Undo blocks' last moves.
                   Blocks[i].setX(undo_block_x[i][moves] * tile_w);
@@ -422,7 +425,7 @@ function update() {
 
                 for (let x = 0; x < tiles_per_screen_x; ++x) {
 
-                  if (Objects.getTile(x, y) == "04x00y") {
+                  if (Objects.getTile(x, y) === "04x00y") {
 
                     // Remove the block markers from the objects layer.
                     Objects.setTile(x, y, "00x00n");
@@ -453,7 +456,7 @@ function update() {
           }
         }
 
-        if (!win && count > 0 && count == number_of_blocks) {
+        if (!win && count > 0 && count === number_of_blocks) {
 
           // The current puzzle has been completed.
           win = true;
@@ -461,7 +464,7 @@ function update() {
           time_difference = (Momo.getTime() - last_time).toFixed(0);
         }
 
-        if (win && Momo.isKeyPressed(Momo.KEY_SPACE)) {
+        if (win && Momo.isKeyPressed("space")) {
 
           loadNextLevel();
         }
@@ -472,7 +475,7 @@ function update() {
         Blocks[i].update();
       }
 
-      if (!Smile.isMoving() && state == 2 && !fail && moves_counter > allowed_moves[level]) {
+      if (!Smile.isMoving() && state === 2 && !fail && moves_counter > allowed_moves[level]) {
 
         fail = true;
 
@@ -481,7 +484,7 @@ function update() {
     break;
   }
 
-  if (Momo.isKeyPressed(Momo.KEY_ESCAPE)) {
+  if (Momo.isKeyPressed("escape")) {
 
     // Return to main menu.
     state = 0;
@@ -535,7 +538,7 @@ function render() {
 
         -21 + 64,
 
-        Momo.TEXT_ALIGN_CENTER,
+        "center",
 
         "Blox"
       );
@@ -545,7 +548,7 @@ function render() {
 
         font_pixel,
 
-        (selection == 0 ? Momo.makeColor(255, 255, 0) : Momo.makeColor(255, 255, 255)),
+        (selection === 0 ? Momo.makeColor(255, 255, 0) : Momo.makeColor(255, 255, 255)),
 
         64,
 
@@ -553,9 +556,9 @@ function render() {
 
         -21 + 64 * 3,
 
-        Momo.TEXT_ALIGN_CENTER,
+        "center",
 
-        (selection == 0 ? "> Normal Mode <" : "Normal Mode")
+        (selection === 0 ? "> Normal Mode <" : "Normal Mode")
       );
 
       // Draw the second selection.
@@ -563,7 +566,7 @@ function render() {
 
         font_pixel,
 
-        (selection == 1 ? Momo.makeColor(255, 255, 0) : Momo.makeColor(255, 255, 255)),
+        (selection === 1 ? Momo.makeColor(255, 255, 0) : Momo.makeColor(255, 255, 255)),
 
         64,
 
@@ -571,9 +574,9 @@ function render() {
 
         -21 + (64 * 4),
 
-        Momo.TEXT_ALIGN_CENTER,
+        "center",
 
-        (selection == 1 ? "> Challenge Mode <" : "Challenge Mode")
+        (selection === 1 ? "> Challenge Mode <" : "Challenge Mode")
       );
 
       // Draw some instructions.
@@ -589,7 +592,7 @@ function render() {
 
         -21 + (64 * 6),
 
-        Momo.TEXT_ALIGN_CENTER,
+        "center",
 
         "Press \"SPACE\" to confirm selection."
       );
@@ -623,7 +626,7 @@ function render() {
 
           for (let x = 0; x < tiles_per_screen_x; ++x) {
 
-            if (Objects.getTileFlag(x, y) == "y") {
+            if (Objects.getTileFlag(x, y) === "y") {
 
               // Surround solid objects with a red outline.
               Momo.drawRectangle(x * tile_w, y * tile_h, x * tile_w + tile_h, y * tile_w + tile_h, Momo.makeColor(255, 0, 0), 3);
@@ -637,10 +640,10 @@ function render() {
       if (!edit_mode) {
 
         // Draw the current level number.
-        Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, 8, -21, Momo.TEXT_ALIGN_LEFT, level + 1);
+        Momo.drawText(font_pixel, Momo.makeColor(255, 255, 255), 64, 8, -21, "left", level + 1);
 
         // Draw number of moves player has made.
-        if (state == 2) {
+        if (state === 2) {
 
           Momo.drawText(
 
@@ -654,7 +657,7 @@ function render() {
 
             -21,
 
-            Momo.TEXT_ALIGN_RIGHT,
+            "right",
 
             moves_counter + "/" + allowed_moves[level]
           );
@@ -673,7 +676,7 @@ function render() {
 
             -21,
 
-            Momo.TEXT_ALIGN_RIGHT,
+            "right",
 
             moves_counter
           );
@@ -736,7 +739,7 @@ function render() {
 
           -21,
 
-          Momo.TEXT_ALIGN_CENTER,
+          "center",
 
           "- Level #" + (parseInt(level) + 1) + " Results -"
         );
@@ -744,8 +747,8 @@ function render() {
         let results_text = "";
 
         results_text += "Solved in " + time_difference;
-        results_text += " " + (time_difference == 1 ? "second" : "seconds");
-        results_text += " with " + moves_counter + " " + (moves == 1 ? "move" : "moves") + ".";
+        results_text += " " + (time_difference === 1 ? "second" : "seconds");
+        results_text += " with " + moves_counter + " " + (moves === 1 ? "move" : "moves") + ".";
 
         Momo.drawText(
 
@@ -759,7 +762,7 @@ function render() {
 
           Momo.getCanvasHeight() / 4 - 48,
 
-          Momo.TEXT_ALIGN_CENTER,
+          "center",
 
           results_text
         );
@@ -776,7 +779,7 @@ function render() {
 
           Momo.getCanvasHeight() / 4 + 48 / 2,
 
-          Momo.TEXT_ALIGN_CENTER,
+          "center",
 
           "Press \"R\" to play again or \"SPACE\" to continue."
         );
@@ -840,7 +843,7 @@ function render() {
 
           -21,
 
-          Momo.TEXT_ALIGN_CENTER,
+          "center",
 
           "- Failure -"
         );
@@ -861,7 +864,7 @@ function render() {
 
           Momo.getCanvasHeight() / 4 - 48,
 
-          Momo.TEXT_ALIGN_CENTER,
+          "center",
 
           results_text
         );
@@ -878,7 +881,7 @@ function render() {
 
           Momo.getCanvasHeight() / 4 + 48 / 2,
 
-          Momo.TEXT_ALIGN_CENTER,
+          "center",
 
           "Press \"R\" to try again or \"ESCAPE\" to go back."
         );
@@ -937,13 +940,13 @@ function loadResources() {
 
 function eraseBlock() {
 
-  if (Objects.getTile(mouse_tile_x + 1, mouse_tile_y + 1) == "04x00y") {
+  if (Objects.getTile(mouse_tile_x + 1, mouse_tile_y + 1) === "04x00y") {
 
     Objects.setTile(mouse_tile_x + 1, mouse_tile_y + 1, "00x00n");
 
     for (let i = 0; i < number_of_blocks; ++i) {
 
-      if (Blocks[i].getX() == (mouse_tile_x + 1) * tile_w && Blocks[i].getY() == (mouse_tile_y + 1) * tile_h) {
+      if (Blocks[i].getX() === (mouse_tile_x + 1) * tile_w && Blocks[i].getY() === (mouse_tile_y + 1) * tile_h) {
 
         --number_of_blocks;
 
@@ -1027,7 +1030,7 @@ function drawEditor() {
 
     mouse_tile_y * tile_h - tile_w * 2,
 
-    Momo.TEXT_ALIGN_CENTER,
+    "center",
 
     item_text
   );
@@ -1049,7 +1052,7 @@ function exportData() {
 
       ++count;
 
-      if (count == tiles_per_screen_x / 2) {
+      if (count === tiles_per_screen_x / 2) {
 
         count = 0;
 
@@ -1075,7 +1078,7 @@ function exportData() {
 
       ++count;
 
-      if (count == tiles_per_screen_x / 2) {
+      if (count === tiles_per_screen_x / 2) {
 
         count = 0;
 
@@ -1109,7 +1112,7 @@ function importData(data) {
 
     for (let x = 0; x < tiles_per_screen_x; ++x) {
 
-      if (Objects.getTile(x, y) == "04x00y") {
+      if (Objects.getTile(x, y) === "04x00y") {
 
         ++number_of_blocks;
 
@@ -1127,4 +1130,4 @@ function importData(data) {
   restore();
 }
 
-Momo.loadFunction(main);
+Momo.setEntryPoint(main);

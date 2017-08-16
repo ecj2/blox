@@ -58,13 +58,13 @@ class Player {
 
     if (!this.moving) {
 
-      if (Momo.isKeyDown(Momo.KEY_UP)) {
+      if (Momo.isKeyDown("up")) {
 
         for (let i = 0; i < number_of_blocks; ++i) {
 
           if (collide(this.x, this.y - 1, Blocks[i].getX(), Blocks[i].getY())) {
 
-            if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h - 2) != "y") {
+            if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h - 2) !== "y") {
 
               undo_block_x[i][moves] = Blocks[i].getX() / tile_w;
               undo_block_y[i][moves] = Blocks[i].getY() / tile_h;
@@ -74,7 +74,7 @@ class Player {
           }
         }
 
-        if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h - 1) != "y") {
+        if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h - 1) !== "y") {
 
           undo_player_x[moves] = this.x / tile_w;
           undo_player_y[moves] = this.y / tile_h;
@@ -86,10 +86,14 @@ class Player {
         }
         else {
 
-          if (Objects.getTile(this.x / tile_w, this.y / tile_h - 1) == "03x00y") {
+          if (Objects.getTile(this.x / tile_w, this.y / tile_h - 1) === "03x00y") {
 
             // The player can not move up.
-            Momo.playSound(sound_error, 1.0, 1.0, false);
+
+            if (!Momo.isSoundPlaying(sound_error)) {
+
+              Momo.playSound(sound_error, 1.0, 1.0, false);
+            }
           }
           else {
 
@@ -100,7 +104,7 @@ class Player {
 
             for (let i = 0; i < number_of_blocks; ++i) {
 
-              if (Blocks[i].getX() == tile_x * tile_w && Blocks[i].getY() == tile_y * tile_h) {
+              if (Blocks[i].getX() === tile_x * tile_w && Blocks[i].getY() === tile_y * tile_h) {
 
                 block_number = i;
 
@@ -108,24 +112,28 @@ class Player {
               }
             }
 
-            if (block_number != undefined) {
+            if (block_number !== undefined) {
 
               if (!Blocks[block_number].isPushable(UP)) {
 
                 // The block can not be pushed up.
-                Momo.playSound(sound_error, 1.0, 1.0, false);
+
+                if (!Momo.isSoundPlaying(sound_error)) {
+
+                  Momo.playSound(sound_error, 1.0, 1.0, false);
+                }
               }
             }
           }
         }
       }
-      else if (Momo.isKeyDown(Momo.KEY_DOWN)) {
+      else if (Momo.isKeyDown("down")) {
 
         for (let i = 0; i < number_of_blocks; ++i) {
 
           if (collide(this.x, this.y + 1, Blocks[i].getX(), Blocks[i].getY())) {
 
-            if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h + 2) != "y") {
+            if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h + 2) !== "y") {
 
               undo_block_x[i][moves] = Blocks[i].getX() / tile_w;
               undo_block_y[i][moves] = Blocks[i].getY() / tile_h;
@@ -135,7 +143,7 @@ class Player {
           }
         }
 
-        if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h + 1) != "y") {
+        if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h + 1) !== "y") {
 
           undo_player_x[moves] = this.x / tile_w;
           undo_player_y[moves] = this.y / tile_h;
@@ -147,10 +155,14 @@ class Player {
         }
         else {
 
-          if (Objects.getTile(this.x / tile_w, this.y / tile_h + 1) == "03x00y") {
+          if (Objects.getTile(this.x / tile_w, this.y / tile_h + 1) === "03x00y") {
 
             // The player can not move down.
-            Momo.playSound(sound_error, 1.0, 1.0, false);
+
+            if (!Momo.isSoundPlaying(sound_error)) {
+
+              Momo.playSound(sound_error, 1.0, 1.0, false);
+            }
           }
           else {
 
@@ -161,7 +173,7 @@ class Player {
 
             for (let i = 0; i < number_of_blocks; ++i) {
 
-              if (Blocks[i].getX() == tile_x * tile_w && Blocks[i].getY() == tile_y * tile_h) {
+              if (Blocks[i].getX() === tile_x * tile_w && Blocks[i].getY() === tile_y * tile_h) {
 
                 block_number = i;
 
@@ -169,24 +181,28 @@ class Player {
               }
             }
 
-            if (block_number != undefined) {
+            if (block_number !== undefined) {
 
               if (!Blocks[block_number].isPushable(DOWN)) {
 
                 // The block can not be pushed down.
-                Momo.playSound(sound_error, 1.0, 1.0, false);
+
+                if (!Momo.isSoundPlaying(sound_error)) {
+
+                  Momo.playSound(sound_error, 1.0, 1.0, false);
+                }
               }
             }
           }
         }
       }
-      else if (Momo.isKeyDown(Momo.KEY_LEFT)) {
+      else if (Momo.isKeyDown("left")) {
 
         for (let i = 0; i < number_of_blocks; ++i) {
 
           if (collide(this.x - 1, this.y, Blocks[i].getX(), Blocks[i].getY())) {
 
-            if (Objects.getTileFlag(this.x / tile_w - 2, this.y / tile_h) != "y") {
+            if (Objects.getTileFlag(this.x / tile_w - 2, this.y / tile_h) !== "y") {
 
               undo_block_x[i][moves] = Blocks[i].getX() / tile_w;
               undo_block_y[i][moves] = Blocks[i].getY() / tile_h;
@@ -196,7 +212,7 @@ class Player {
           }
         }
 
-        if (Objects.getTileFlag(this.x / tile_w - 1, this.y / tile_h) != "y") {
+        if (Objects.getTileFlag(this.x / tile_w - 1, this.y / tile_h) !== "y") {
 
           undo_player_x[moves] = this.x / tile_w;
           undo_player_y[moves] = this.y / tile_h;
@@ -208,10 +224,14 @@ class Player {
         }
         else {
 
-          if (Objects.getTile(this.x / tile_w - 1, this.y / tile_h) == "03x00y") {
+          if (Objects.getTile(this.x / tile_w - 1, this.y / tile_h) === "03x00y") {
 
             // The player can not move left.
-            Momo.playSound(sound_error, 1.0, 1.0, false);
+
+            if (!Momo.isSoundPlaying(sound_error)) {
+
+              Momo.playSound(sound_error, 1.0, 1.0, false);
+            }
           }
           else {
 
@@ -222,7 +242,7 @@ class Player {
 
             for (let i = 0; i < number_of_blocks; ++i) {
 
-              if (Blocks[i].getX() == tile_x * tile_w && Blocks[i].getY() == tile_y * tile_h) {
+              if (Blocks[i].getX() === tile_x * tile_w && Blocks[i].getY() === tile_y * tile_h) {
 
                 block_number = i;
 
@@ -230,24 +250,28 @@ class Player {
               }
             }
 
-            if (block_number != undefined) {
+            if (block_number !== undefined) {
 
               if (!Blocks[block_number].isPushable(LEFT)) {
 
                 // The block can not be pushed left.
-                Momo.playSound(sound_error, 1.0, 1.0, false);
+
+                if (!Momo.isSoundPlaying(sound_error)) {
+
+                  Momo.playSound(sound_error, 1.0, 1.0, false);
+                }
               }
             }
           }
         }
       }
-      else if (Momo.isKeyDown(Momo.KEY_RIGHT)) {
+      else if (Momo.isKeyDown("right")) {
 
         for (let i = 0; i < number_of_blocks; ++i) {
 
           if (collide(this.x + 1, this.y, Blocks[i].getX(), Blocks[i].getY())) {
 
-            if (Objects.getTileFlag(this.x / tile_w + 2, this.y / tile_h) != "y") {
+            if (Objects.getTileFlag(this.x / tile_w + 2, this.y / tile_h) !== "y") {
 
               undo_block_x[i][moves] = Blocks[i].getX() / tile_w;
               undo_block_y[i][moves] = Blocks[i].getY() / tile_h;
@@ -257,7 +281,7 @@ class Player {
           }
         }
 
-        if (Objects.getTileFlag(this.x / tile_w + 1, this.y / tile_h) != "y") {
+        if (Objects.getTileFlag(this.x / tile_w + 1, this.y / tile_h) !== "y") {
 
           undo_player_x[moves] = this.x / tile_w;
           undo_player_y[moves] = this.y / tile_h;
@@ -269,10 +293,14 @@ class Player {
         }
         else {
 
-          if (Objects.getTile(this.x / tile_w + 1, this.y / tile_h) == "03x00y") {
+          if (Objects.getTile(this.x / tile_w + 1, this.y / tile_h) === "03x00y") {
 
             // The player can not move right.
-            Momo.playSound(sound_error, 1.0, 1.0, false);
+
+            if (!Momo.isSoundPlaying(sound_error)) {
+
+              Momo.playSound(sound_error, 1.0, 1.0, false);
+            }
           }
           else {
 
@@ -283,7 +311,7 @@ class Player {
 
             for (let i = 0; i < number_of_blocks; ++i) {
 
-              if (Blocks[i].getX() == tile_x * tile_w && Blocks[i].getY() == tile_y * tile_h) {
+              if (Blocks[i].getX() === tile_x * tile_w && Blocks[i].getY() === tile_y * tile_h) {
 
                 block_number = i;
 
@@ -291,12 +319,16 @@ class Player {
               }
             }
 
-            if (block_number != undefined) {
+            if (block_number !== undefined) {
 
               if (!Blocks[block_number].isPushable(RIGHT)) {
 
                 // The block can not be pushed right.
-                Momo.playSound(sound_error, 1.0, 1.0, false);
+
+                if (!Momo.isSoundPlaying(sound_error)) {
+
+                  Momo.playSound(sound_error, 1.0, 1.0, false);
+                }
               }
             }
           }

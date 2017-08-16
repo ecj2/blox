@@ -66,7 +66,7 @@ class Block {
       // Set the tile that the block occupies to solid.
       Objects.setTile(this.x / tile_w, this.y / tile_h, "04x00y");
 
-      if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h - 1) == "y") {
+      if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h - 1) === "y") {
 
         this.pushable[UP] = false;
       }
@@ -75,7 +75,7 @@ class Block {
         this.pushable[UP] = true;
       }
 
-      if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h + 1) == "y") {
+      if (Objects.getTileFlag(this.x / tile_w, this.y / tile_h + 1) === "y") {
 
         this.pushable[DOWN] = false;
       }
@@ -84,7 +84,7 @@ class Block {
         this.pushable[DOWN] = true;
       }
 
-      if (Objects.getTileFlag(this.x / tile_w - 1, this.y / tile_h) == "y") {
+      if (Objects.getTileFlag(this.x / tile_w - 1, this.y / tile_h) === "y") {
 
         this.pushable[LEFT] = false;
       }
@@ -93,7 +93,7 @@ class Block {
         this.pushable[LEFT] = true;
       }
 
-      if (Objects.getTileFlag(this.x / tile_w + 1, this.y / tile_h) == "y") {
+      if (Objects.getTileFlag(this.x / tile_w + 1, this.y / tile_h) === "y") {
 
         this.pushable[RIGHT] = false;
       }
@@ -103,7 +103,7 @@ class Block {
       }
     }
 
-    if (Background.getTile((this.x / tile_w).toFixed(0), (this.y / tile_h).toFixed()) == "05x00n") {
+    if (Background.getTile((this.x / tile_w).toFixed(0), (this.y / tile_h).toFixed()) === "05x00n") {
 
       if (!this.resting_on_goal) {
 
