@@ -55,7 +55,7 @@ class Block {
 
         this.play_sound = false;
 
-        Momo.playSound(sound_push, 0.35, 1.0, false);
+        Momo.playSample(sound_push, 0.35, 1.0, false, 1);
       }
     }
 
@@ -110,7 +110,7 @@ class Block {
         // The block is resting on a goal.
         this.resting_on_goal = true;
 
-        Momo.playSound(sound_goal, 1.0, 1.0, false);
+        Momo.playSample(sound_goal, 1.0, 1.0, false, 2);
       }
     }
     else {
@@ -142,7 +142,7 @@ class Block {
     if (this.resting_on_goal) {
 
       // Draw the block as blue.
-      Momo.drawPartialImage(
+      Momo.drawClippedBitmap(
 
         image_tiles,
 
@@ -162,7 +162,7 @@ class Block {
     else {
 
       // Draw the block as red.
-      Momo.drawPartialImage(
+      Momo.drawClippedBitmap(
 
         image_tiles,
 

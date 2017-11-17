@@ -90,9 +90,9 @@ class Player {
 
             // The player can not move up.
 
-            if (!Momo.isSoundPlaying(sound_error)) {
+            if (!Momo.isSamplePlaying(0)) {
 
-              Momo.playSound(sound_error, 1.0, 1.0, false);
+              Momo.playSample(sound_error, 1.0, 1.0, false, 0);
             }
           }
           else {
@@ -118,9 +118,9 @@ class Player {
 
                 // The block can not be pushed up.
 
-                if (!Momo.isSoundPlaying(sound_error)) {
+                if (!Momo.isSamplePlaying(0)) {
 
-                  Momo.playSound(sound_error, 1.0, 1.0, false);
+                  Momo.playSample(sound_error, 1.0, 1.0, false, 0);
                 }
               }
             }
@@ -159,9 +159,9 @@ class Player {
 
             // The player can not move down.
 
-            if (!Momo.isSoundPlaying(sound_error)) {
+            if (!Momo.isSamplePlaying(0)) {
 
-              Momo.playSound(sound_error, 1.0, 1.0, false);
+              Momo.playSample(sound_error, 1.0, 1.0, false, 0);
             }
           }
           else {
@@ -187,9 +187,9 @@ class Player {
 
                 // The block can not be pushed down.
 
-                if (!Momo.isSoundPlaying(sound_error)) {
+                if (!Momo.isSamplePlaying(0)) {
 
-                  Momo.playSound(sound_error, 1.0, 1.0, false);
+                  Momo.playSample(sound_error, 1.0, 1.0, false, 0);
                 }
               }
             }
@@ -228,9 +228,9 @@ class Player {
 
             // The player can not move left.
 
-            if (!Momo.isSoundPlaying(sound_error)) {
+            if (!Momo.isSamplePlaying(0)) {
 
-              Momo.playSound(sound_error, 1.0, 1.0, false);
+              Momo.playSample(sound_error, 1.0, 1.0, false, 0);
             }
           }
           else {
@@ -256,9 +256,9 @@ class Player {
 
                 // The block can not be pushed left.
 
-                if (!Momo.isSoundPlaying(sound_error)) {
+                if (!Momo.isSamplePlaying(0)) {
 
-                  Momo.playSound(sound_error, 1.0, 1.0, false);
+                  Momo.playSample(sound_error, 1.0, 1.0, false, 0);
                 }
               }
             }
@@ -297,9 +297,9 @@ class Player {
 
             // The player can not move right.
 
-            if (!Momo.isSoundPlaying(sound_error)) {
+            if (!Momo.isSamplePlaying(0)) {
 
-              Momo.playSound(sound_error, 1.0, 1.0, false);
+              Momo.playSample(sound_error, 1.0, 1.0, false, 0);
             }
           }
           else {
@@ -325,9 +325,9 @@ class Player {
 
                 // The block can not be pushed right.
 
-                if (!Momo.isSoundPlaying(sound_error)) {
+                if (!Momo.isSamplePlaying(0)) {
 
-                  Momo.playSound(sound_error, 1.0, 1.0, false);
+                  Momo.playSample(sound_error, 1.0, 1.0, false, 0);
                 }
               }
             }
@@ -339,7 +339,7 @@ class Player {
 
   render() {
 
-    Momo.drawPartialImage(
+    Momo.drawClippedBitmap(
 
       image_tiles,
 

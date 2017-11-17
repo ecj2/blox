@@ -30,7 +30,7 @@ class Layer {
         let axis_y = this.tiles[x][y].substring(3, 5);
 
         // Draw the tiles.
-        Momo.drawPartialImage(
+        Momo.drawClippedBitmap(
 
           image_tiles,
 

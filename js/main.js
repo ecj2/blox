@@ -479,7 +479,7 @@ function update() {
 
         fail = true;
 
-        Momo.playSound(sound_error, 1.0, 1.0, false);
+        Momo.playSample(sound_error, 1.0, 1.0, false, 3);
       }
     break;
   }
@@ -506,7 +506,7 @@ function render() {
         for (let x = 0; x < tiles_per_screen_x; ++x) {
 
           // Draw a dark background.
-          Momo.drawPartialImage(
+          Momo.drawClippedBitmap(
 
             image_tiles,
 
@@ -601,7 +601,7 @@ function render() {
     case 1: case 2:
 
       // Normal mode.
-      let context = Momo.canvas.context;
+      let context = Momo.getCanvasContext();
 
       context.save();
 
@@ -690,7 +690,7 @@ function render() {
           for (let x = 0; x < tiles_per_screen_x; ++x) {
 
             // Draw a dark background.
-            Momo.drawPartialImage(
+            Momo.drawClippedBitmap(
 
               image_tiles,
 
@@ -794,7 +794,7 @@ function render() {
           for (let x = 0; x < tiles_per_screen_x; ++x) {
 
             // Draw a dark background.
-            Momo.drawPartialImage(
+            Momo.drawClippedBitmap(
 
               image_tiles,
 
@@ -915,11 +915,11 @@ function loadResources() {
 
   font_pixel = Momo.loadFont("data/pixelade.ttf");
 
-  image_tiles = Momo.loadImage("data/tiles.png");
+  image_tiles = Momo.loadBitmap("data/tiles.png");
 
-  sound_push = Momo.loadSound("data/push.mp3");
-  sound_goal = Momo.loadSound("data/goal.mp3");
-  sound_error = Momo.loadSound("data/error.mp3");
+  sound_push = Momo.loadSample("data/push.mp3");
+  sound_goal = Momo.loadSample("data/goal.mp3");
+  sound_error = Momo.loadSample("data/error.mp3");
 
   Smile = new Player();
   Objects = new Layer();
@@ -964,7 +964,7 @@ function eraseBlock() {
 function drawEditor() {
 
   // Draw the current item.
-  Momo.drawPartialImage(
+  Momo.drawClippedBitmap(
 
     image_tiles,
 
@@ -982,7 +982,7 @@ function drawEditor() {
   );
 
   // Draw a highlight around the current item.
-  Momo.drawPartialImage(
+  Momo.drawClippedBitmap(
 
     image_tiles,
 
@@ -1000,7 +1000,7 @@ function drawEditor() {
   );
 
   // Draw a custom mouse cursor.
-  Momo.drawPartialImage(
+  Momo.drawClippedBitmap(
 
     image_tiles,
 
